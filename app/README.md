@@ -67,12 +67,6 @@ bun dev
 bun run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-bun test:unit
-```
-
 ### Lint with [ESLint](https://eslint.org/)
 
 ```sh
