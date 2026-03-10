@@ -18,7 +18,7 @@ Notes on architecture and decisions for the frontend coding challenge.
 - **Real-time updates**: WebSocket used on the individual asset view for live telemetry.
 - **Responsive design**: Mobile vs desktop (e.g. Tile/Table hidden on mobile), collapsible sections.
 - **State management**: Pinia stores for assets, selection, telemetry, and power.
-- **Testing**: Not implemented; would add unit/integration tests given more time.
+- **Testing**: Not implemented; would add unit/integration tests given more time. If I had more time I would also refactor and organize components further, add tests for API calls, and tests around form validation.
 
 ---
 

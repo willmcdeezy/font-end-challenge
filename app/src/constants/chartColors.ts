@@ -16,5 +16,5 @@ export const ASSET_CHART_PALETTE = [
 ]
 
 export function assetColorByIndex(index: number): string {
-  return ASSET_CHART_PALETTE[index % ASSET_CHART_PALETTE.length]
+  return ASSET_CHART_PALETTE[index % ASSET_CHART_PALETTE.length] ?? '#7cb5ec'
 }

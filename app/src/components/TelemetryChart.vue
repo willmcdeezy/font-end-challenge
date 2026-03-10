@@ -60,10 +60,10 @@ const chartOptions = computed<Options>(() => {
     title: { text: undefined, ...darkTheme.title },
     xAxis: { categories, ...darkTheme.xAxis },
     yAxis: {
-      title: { text: undefined },
+      ...darkTheme.yAxis,
+      title: { ...darkTheme.yAxis.title, text: undefined },
       min: 0,
       tickInterval: 50,
-      ...darkTheme.yAxis,
     },
     legend: { enabled: series.length > 1, ...darkTheme.legend },
     tooltip: { shared: true, ...darkTheme.tooltip },

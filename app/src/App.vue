@@ -40,7 +40,7 @@ const helpOpen = ref(false)
         </v-card-title>
         <v-card-text class="pt-0">
           <ul class="help-list">
-            <li>Click an asset to view more real time data and individual metric and power.</li>
+            <li>Click an asset to view more real time data and individual metrics and power.</li>
             <li>Click legend items to remove or add data to charts.</li>
           </ul>
         </v-card-text>
