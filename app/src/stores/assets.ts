@@ -20,5 +20,14 @@ export const useAssetsStore = defineStore('assets', () => {
     }
   }
 
-  return { list, loading, error, load }
+  function updateAsset(
+    id: string,
+    patch: Partial<Pick<Asset, 'name' | 'location'>>
+  ) {
+    const asset = list.value.find((a) => a.id === id)
+    if (asset && patch.name !== undefined) asset.name = patch.name
+    if (asset && patch.location !== undefined) asset.location = patch.location
+  }
+
+  return { list, loading, error, load, updateAsset }
 })

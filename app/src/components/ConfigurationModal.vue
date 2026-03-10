@@ -3,7 +3,10 @@ import { ref, watch } from 'vue'
 import type { Asset } from '@/types'
 import type { AssetConfiguration } from '@/types'
 import { fetchConfiguration, saveConfiguration } from '@/api/configuration'
+import { useAssetsStore } from '@/stores/assets'
 import ModalCloseButton from '@/components/ModalCloseButton.vue'
+
+const assetsStore = useAssetsStore()
 
 const props = defineProps<{
   asset: Asset
@@ -106,6 +109,10 @@ async function onSubmit() {
       notes: form.value.notes,
     }
     await saveConfiguration(payload)
+    assetsStore.updateAsset(payload.asset_id, {
+      name: payload.name,
+      location: payload.location,
+    })
     emit('saved')
     emit('update:modelValue', false)
   } catch (e) {

@@ -2,6 +2,22 @@
 
 Asset management dashboard (Vue 3 + Vite + TypeScript).
 
+## How to start the project
+
+1. **Start the backend API** (from the project root directory):
+   ```sh
+   docker-compose up
+   ```
+   Or see the root README for other options. The API runs at http://localhost:8000.
+
+2. **Install dependencies and run the frontend** (from the `app/` directory):
+   ```sh
+   cd app
+   bun install
+   bun dev
+   ```
+   The app will be available at http://localhost:5173 (or the port Vite prints).
+
 ## Notes
 
 - **Single route** (`/`): asset list (tiles or table) with telemetry and power chart sections below. No separate pages; back = clear selection when we add detail flow later.

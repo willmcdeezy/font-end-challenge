@@ -1,6 +1,18 @@
 # Project notes
 
+Scope was kept to the prescribed time limit; I would have done more with more time.
+
 Notes on architecture and decisions for the frontend coding challenge.
+
+## Setup
+
+Start the backend API first (from project root: `docker-compose up` or see main README). Then install and run the app:
+
+```sh
+cd app
+bun install
+bun dev
+```
 
 ---
 
@@ -28,6 +40,8 @@ Notes on architecture and decisions for the frontend coding challenge.
 - **Telemetry**: **Generated on each request** by the API (realistic random values per asset type/status). Not stored; I fetch once on load and on the asset page I also use the WebSocket for live updates.
 - **Power**: **Generated on request** (history + forecast). I fetch and cache per asset in the power store.
 - **Configurations**: There is **no database**. The API stores configurations **in memory** (see `api/API_NOTES.md`: “Configurations are stored in-memory (reset on restart)”). When you submit the Edit form I `POST /api/configuration`; the backend saves it in a dict. Data persists until the API process restarts. So **yes, you can update configuration data** — it is stored in the API’s memory and returned by `GET /api/configuration/{asset_id}` until the server restarts.
+
+- **Note:** The configuration form and API update correctly on save. I was primarily focused on the key endpoints for data (assets, telemetry, power). I added a **refresh** that patches the assets store with the new name/location after save so the individual page (and tiles/table) update without refetching. We are **not** using `GET /api/configurations` or a configurations store to drive displayed name/location. If I had more time I would load configurations (e.g. on app init) into a store and derive display name/location from config when present, and would work on more of this and related polish.
 
 ---
 
