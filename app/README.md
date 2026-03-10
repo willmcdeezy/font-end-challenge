@@ -10,6 +10,7 @@ Asset management dashboard (Vue 3 + Vite + TypeScript).
 - **Collapsible Assets section**: The Assets block is an expandable panel (accordion). Section title “Assets” is always visible; clicking it folds or expands the content (view toggle + tiles or table). When collapsed, the toggle and list/table are hidden. This gives mobile a single “Assets” header to tap to show/hide the list without a separate full-screen flow.
 - **State**: Pinia — `assets` (list, load), `selection` (telemetryIds, powerIds, viewMode, toggles). Chart data in dedicated stores: `telemetry` (by asset id), `power` (by asset id). See project root **NOTES.md** for why we load all telemetry/power once after assets and keep data keyed by asset id.
 - **API**: `src/api/` for fetch helpers; types in `src/types/`. Telemetry and power fetched once on mount (after assets load); charts filter by selection.
+- **Individual asset view**: Clicking an asset (tile or table) goes to `/asset/:id`. That page shows **live telemetry** via WebSocket and a **power consumption** chart for that asset only, for better detail viewing. Edit opens the configuration modal.
 
 ## Recommended IDE Setup
 

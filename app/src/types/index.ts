@@ -31,3 +31,22 @@ export interface PowerHistory {
   forecast: PowerDataPoint[]
   metadata: Record<string, unknown>
 }
+
+export interface AssetConfiguration {
+  asset_id: string
+  name: string
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  maintenance_mode: 'scheduled' | 'predictive' | 'reactive'
+  operating_mode: 'continuous' | 'intermittent' | 'on_demand'
+  maintenance_interval_days: number
+  max_runtime_hours: number
+  warning_threshold_percent: number
+  max_temperature_celsius: number
+  max_pressure_psi: number
+  efficiency_target_percent: number
+  power_factor: number
+  load_capacity_percent: number
+  alert_email: string
+  location: string
+  notes?: string
+}

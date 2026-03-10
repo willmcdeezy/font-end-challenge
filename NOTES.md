@@ -34,3 +34,20 @@ Notes on architecture and decisions for the frontend coding challenge.
 | Where to keep data    | Dedicated stores keyed by asset_id          | Single source of truth; charts filter by selection store.             |
 
 See `app/README.md` for how this ties into the app (API modules, stores, and mount-time loading).
+
+---
+
+## Individual asset view (click-through)
+
+- Clicking an asset (tile or table row) navigates to **`/asset/:id`**, an individual asset page for better detail viewing.
+- **Live telemetry**: The individual view connects to the **WebSocket** (`ws://localhost:8000/ws/telemetry`) and shows the four telemetry fields (temperature, pressure, vibration, power) for that asset, updating in real time.
+- **Power consumption**: A dedicated power chart for that asset (history + forecast) is shown on the same page, so users can see detailed power data without the dashboard’s multi-asset chart.
+- Edit opens a **configuration modal**; the rest of the layout (asset header, telemetry, power chart) is always visible (no collapse on the individual page).
+
+---
+
+## Asset name + color bullet: `AssetNameTag` component
+
+- **What it is:** A single reusable component that shows an asset’s **name** with its **color bullet** (same palette index as in the telemetry/power charts), so the same asset has the same colour everywhere.
+- **Sizes:** `size="small"` for **tiles** and **table** (same compact look), `size="large"` for the **asset detail header** (individual asset page). One component, consistent behaviour, different visual weight.
+- **Used in:** Asset tiles (dashboard), table Name column (dashboard), and asset detail header (individual asset page). `AssetNameTags` (plural) is the list variant used where we show multiple asset names (e.g. “selected” tags); `AssetNameTag` (singular) is the single-asset display with size control.

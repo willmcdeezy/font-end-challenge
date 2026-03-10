@@ -6,7 +6,9 @@ import { useSelectionStore } from '@/stores/selection'
 import { useTelemetryStore } from '@/stores/telemetry'
 import { usePowerStore } from '@/stores/power'
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import AssetTile from '@/components/AssetTile.vue'
+import AssetNameTag from '@/components/AssetNameTag.vue'
 import TelemetryChart from '@/components/TelemetryChart.vue'
 import PowerChart from '@/components/PowerChart.vue'
 
@@ -14,6 +16,7 @@ const assetsStore = useAssetsStore()
 const selection = useSelectionStore()
 const telemetryStore = useTelemetryStore()
 const powerStore = usePowerStore()
+const router = useRouter()
 const { mobile } = useDisplay()
 const assetsExpanded = ref<number[]>([0])
 const telemetryExpanded = ref<number[]>([0])
@@ -38,6 +41,10 @@ function statusColor(status: string) {
   if (s === 'standby') return 'warning'
   if (s === 'maintenance') return 'error'
   return 'default'
+}
+
+function goToAsset(id: string) {
+  router.push({ name: 'AssetDetail', params: { id } })
 }
 </script>
 
@@ -85,19 +92,22 @@ function statusColor(status: string) {
               </span>
             </th>
             <th>Status</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="asset in assetsStore.list" :key="asset.id">
+          <tr
+            v-for="asset in assetsStore.list"
+            :key="asset.id"
+            class="table-assets-row"
+            @click="goToAsset(asset.id)"
+          >
             <td class="table-type-col">{{ asset.type }}</td>
-            <td>{{ asset.name }}</td>
+            <td>
+              <AssetNameTag :asset="asset" size="small" />
+            </td>
             <td>{{ asset.location }}</td>
             <td>
               <v-chip size="small" :color="statusColor(asset.status)" variant="tonal">{{ asset.status }}</v-chip>
-            </td>
-            <td>
-              <v-btn size="small" variant="text" color="primary">Edit</v-btn>
             </td>
           </tr>
             </tbody>
@@ -158,6 +168,12 @@ function statusColor(status: string) {
 }
 .table-type-col {
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+}
+.table-assets-row {
+  cursor: pointer;
+}
+.table-assets-row:hover {
+  background: rgba(0, 0, 0, 0.04);
 }
 .chart-placeholder {
   min-height: 120px;
