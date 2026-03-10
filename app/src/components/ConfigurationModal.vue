@@ -143,7 +143,7 @@ function onClose() {
             variant="outlined"
             density="compact"
             class="mb-2"
-            :rules="[(v) => !!v && v.length >= 3 || 'Min 3 characters']"
+            :rules="[(v) => !!v && v.length >= 3 && v.length <= 100 || '3–100 characters']"
           />
           <v-text-field
             v-model="form.location"
@@ -151,7 +151,7 @@ function onClose() {
             variant="outlined"
             density="compact"
             class="mb-2"
-            :rules="[(v) => !!v || 'Required']"
+            :rules="[(v) => !!v || 'Required', (v) => !v || v.length <= 200 || 'Max 200 characters']"
           />
           <v-select
             v-model="form.priority"
@@ -276,6 +276,7 @@ function onClose() {
             density="compact"
             rows="2"
             class="mb-2"
+            :rules="[(v) => !v || (typeof v === 'string' && v.length <= 500) || 'Max 500 characters']"
           />
         </v-form>
       </v-card-text>

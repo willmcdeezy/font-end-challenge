@@ -19,7 +19,7 @@ const statusColor = computed(() => {
 
 <template>
   <div class="asset-detail-header">
-    <div class="d-flex align-center justify-space-between flex-wrap gap-3 mb-3">
+    <div class="d-flex align-center justify-space-between flex-wrap gap-2 mb-2">
       <AssetNameTag :asset="asset" size="large" />
       <v-btn color="primary" variant="tonal" @click="emit('edit')">Edit</v-btn>
     </div>
@@ -28,7 +28,7 @@ const statusColor = computed(() => {
         <span class="detail-type">{{ asset.type }}</span>
         <v-chip size="small" :color="statusColor" variant="tonal">{{ asset.status }}</v-chip>
       </div>
-      <div class="detail-location mt-2">
+      <div class="detail-location mt-1">
         <span class="d-inline-flex align-center gap-1">
           <v-icon :icon="`svg:${mdiMapMarker}`" size="small" />
           {{ asset.location }}
@@ -40,14 +40,14 @@ const statusColor = computed(() => {
 
 <style scoped>
 .asset-detail-header {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 .detail-meta {
   display: flex;
   flex-direction: column;
 }
 .detail-meta-row {
-  gap: 32px;
+  gap: 8px;
 }
 .detail-type {
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
