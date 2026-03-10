@@ -51,3 +51,10 @@ See `app/README.md` for how this ties into the app (API modules, stores, and mou
 - **What it is:** A single reusable component that shows an asset’s **name** with its **color bullet** (same palette index as in the telemetry/power charts), so the same asset has the same colour everywhere.
 - **Sizes:** `size="small"` for **tiles** and **table** (same compact look), `size="large"` for the **asset detail header** (individual asset page). One component, consistent behaviour, different visual weight.
 - **Used in:** Asset tiles (dashboard), table Name column (dashboard), and asset detail header (individual asset page). `AssetNameTags` (plural) is the list variant used where we show multiple asset names (e.g. “selected” tags); `AssetNameTag` (singular) is the single-asset display with size control.
+
+---
+
+## Highcharts accessibility
+
+- We set **`accessibility.enabled: false`** globally (in `main.ts` via `Highcharts.setOptions`) to suppress the console warning about including the `accessibility.js` module.
+- With more time we would ensure accessibility standards are met: enable Highcharts accessibility and/or include the module, add keyboard and screen-reader support for charts, and align with WCAG where applicable.

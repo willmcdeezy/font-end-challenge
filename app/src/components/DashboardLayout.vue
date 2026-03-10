@@ -65,8 +65,8 @@ function goToAsset(id: string) {
               variant="text"
               @update:model-value="selection.setViewMode($event)"
             >
-              <v-btn value="tiles" size="small">Tiles</v-btn>
-              <v-btn value="table" size="small">Table</v-btn>
+              <v-btn value="tiles" size="small">Tile View</v-btn>
+              <v-btn value="table" size="small">Table View</v-btn>
             </v-btn-toggle>
           </div>
 

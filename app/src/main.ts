@@ -7,6 +7,8 @@ import vuetify from './plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 
+Highcharts.setOptions({ accessibility: { enabled: false } })
+
 const app = createApp(App)
 
 app.use(createPinia())

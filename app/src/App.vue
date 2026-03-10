@@ -41,7 +41,6 @@ const helpOpen = ref(false)
         <v-card-text class="pt-0">
           <ul class="help-list">
             <li>Click an asset to view more real time data and individual metric and power.</li>
-            <li>Toggle Asset view for tile or table view.</li>
             <li>Click legend items to remove or add data to charts.</li>
           </ul>
         </v-card-text>

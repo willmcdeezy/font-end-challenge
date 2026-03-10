@@ -23,13 +23,17 @@ const statusColor = computed(() => {
       <AssetNameTag :asset="asset" size="large" />
       <v-btn color="primary" variant="tonal" @click="emit('edit')">Edit</v-btn>
     </div>
-    <div class="d-flex flex-wrap align-center gap-3 text-body-2 detail-meta">
-      <span class="detail-type">{{ asset.type }}</span>
-      <v-chip size="small" :color="statusColor" variant="tonal">{{ asset.status }}</v-chip>
-      <span class="d-inline-flex align-center gap-1 detail-location">
-        <v-icon :icon="`svg:${mdiMapMarker}`" size="small" />
-        {{ asset.location }}
-      </span>
+    <div class="detail-meta text-body-2">
+      <div class="d-flex align-center detail-meta-row">
+        <span class="detail-type">{{ asset.type }}</span>
+        <v-chip size="small" :color="statusColor" variant="tonal">{{ asset.status }}</v-chip>
+      </div>
+      <div class="detail-location mt-2">
+        <span class="d-inline-flex align-center gap-1">
+          <v-icon :icon="`svg:${mdiMapMarker}`" size="small" />
+          {{ asset.location }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -39,12 +43,13 @@ const statusColor = computed(() => {
   margin-bottom: 24px;
 }
 .detail-meta {
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.detail-meta-row {
+  gap: 32px;
 }
 .detail-type {
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
-}
-.detail-location {
-  flex-shrink: 0;
 }
 </style>
