@@ -3,18 +3,29 @@ import { mdiMapMarker } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { useAssetsStore } from '@/stores/assets'
 import { useSelectionStore } from '@/stores/selection'
+import { useTelemetryStore } from '@/stores/telemetry'
+import { usePowerStore } from '@/stores/power'
 import { onMounted, ref } from 'vue'
 import AssetTile from '@/components/AssetTile.vue'
 
 const assetsStore = useAssetsStore()
 const selection = useSelectionStore()
+const telemetryStore = useTelemetryStore()
+const powerStore = usePowerStore()
 const { mobile } = useDisplay()
 const assetsExpanded = ref<number[]>([0])
 const telemetryExpanded = ref<number[]>([0])
 const powerExpanded = ref<number[]>([0])
 
-onMounted(() => {
-  assetsStore.load()
+onMounted(async () => {
+  await assetsStore.load()
+  if (assetsStore.error) return
+  const assetIds = assetsStore.list.map((a) => a.id)
+  if (assetIds.length === 0) return
+  await Promise.all([
+    telemetryStore.loadAll(assetIds),
+    powerStore.loadAll(assetIds),
+  ])
 })
 
 function statusColor(status: string) {

@@ -8,8 +8,8 @@ Asset management dashboard (Vue 3 + Vite + TypeScript).
 - **Asset tiles**: Cards show name, type (mono), chips for status (color by operational/standby/maintenance), location with icon. Per-tile toggles for “include in telemetry” and “include in power.” Edit button is placeholder for configuration form.
 - **View toggle**: Tiles | Table as borderless buttons; selected state highlighted with dark background. Table option is **desktop only** — on tablet/mobile the Table button is disabled with tooltip “Only available on desktop” so we keep one layout (tiles) for small screens and use the collapsible Assets section as the mobile fix.
 - **Collapsible Assets section**: The Assets block is an expandable panel (accordion). Section title “Assets” is always visible; clicking it folds or expands the content (view toggle + tiles or table). When collapsed, the toggle and list/table are hidden. This gives mobile a single “Assets” header to tap to show/hide the list without a separate full-screen flow.
-- **State**: Pinia — `assets` (list, load), `selection` (telemetryIds, powerIds, viewMode, toggles).
-- **API**: `src/api/` for fetch helpers; types in `src/types/`. Telemetry/power API patterns and Highcharts next.
+- **State**: Pinia — `assets` (list, load), `selection` (telemetryIds, powerIds, viewMode, toggles). Chart data in dedicated stores: `telemetry` (by asset id), `power` (by asset id). See project root **NOTES.md** for why we load all telemetry/power once after assets and keep data keyed by asset id.
+- **API**: `src/api/` for fetch helpers; types in `src/types/`. Telemetry and power fetched once on mount (after assets load); charts filter by selection.
 
 ## Recommended IDE Setup
 
