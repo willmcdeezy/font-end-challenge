@@ -10,6 +10,32 @@ const selection = useSelectionStore()
 const telemetryStore = useTelemetryStore()
 const assetsStore = useAssetsStore()
 
+const darkTheme = {
+  chart: { backgroundColor: '#1e1e1e' },
+  title: { style: { color: '#e0e0e0', fontSize: '14px' } },
+  xAxis: {
+    labels: { style: { color: '#9e9e9e' } },
+    lineColor: '#424242',
+    tickColor: '#424242',
+  },
+  yAxis: {
+    title: { style: { color: '#9e9e9e' } },
+    labels: { style: { color: '#9e9e9e' } },
+    gridLineColor: '#424242',
+    lineColor: '#424242',
+    tickColor: '#424242',
+  },
+  legend: {
+    itemStyle: { color: '#e0e0e0' },
+    itemHoverStyle: { color: '#fff' },
+  },
+  tooltip: {
+    backgroundColor: '#2d2d2d',
+    borderColor: '#424242',
+    style: { color: '#e0e0e0' },
+  },
+}
+
 const chartOptions = computed<Options>(() => {
   const ids = Array.from(selection.telemetryIds)
   const categories = ['Temperature (°C)', 'Pressure (psi)', 'Vibration', 'Power (kW)']
@@ -29,18 +55,18 @@ const chartOptions = computed<Options>(() => {
     .filter(Boolean) as Array<{ name: string; type: 'column'; data: number[] }>
 
   return {
-    chart: { type: 'column' },
+    chart: { type: 'column', ...darkTheme.chart },
     colors: ASSET_CHART_PALETTE,
-    title: { text: undefined },
-    xAxis: { categories },
+    title: { text: undefined, ...darkTheme.title },
+    xAxis: { categories, ...darkTheme.xAxis },
     yAxis: {
       title: { text: undefined },
       min: 0,
+      tickInterval: 50,
+      ...darkTheme.yAxis,
     },
-    legend: { enabled: series.length > 1 },
-    tooltip: {
-      shared: true,
-    },
+    legend: { enabled: series.length > 1, ...darkTheme.legend },
+    tooltip: { shared: true, ...darkTheme.tooltip },
     plotOptions: {
       column: {
         grouping: true,

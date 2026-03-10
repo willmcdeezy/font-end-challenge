@@ -7,7 +7,6 @@ import { useTelemetryStore } from '@/stores/telemetry'
 import { usePowerStore } from '@/stores/power'
 import { onMounted, ref } from 'vue'
 import AssetTile from '@/components/AssetTile.vue'
-import AssetNameTags from '@/components/AssetNameTags.vue'
 import TelemetryChart from '@/components/TelemetryChart.vue'
 import PowerChart from '@/components/PowerChart.vue'
 
@@ -114,12 +113,8 @@ function statusColor(status: string) {
         <v-expansion-panel-title>Telemetry</v-expansion-panel-title>
         <v-expansion-panel-text>
           <div class="chart-placeholder">
-            <AssetNameTags v-if="selection.telemetryList.length > 0" :ids="selection.telemetryList" class="mb-2" />
-            <p v-else class="text-body-2 text-medium-emphasis mb-2">
-              Select assets above to include in telemetry.
-            </p>
             <template v-if="selection.telemetryIds.size > 0 && !telemetryStore.loading">
-              <TelemetryChart class="chart-container" />
+              <TelemetryChart class="chart-container chart-container--tall" />
             </template>
             <div v-else-if="selection.telemetryIds.size === 0" class="chart-empty" aria-hidden="true">
               Chart (select assets above)
@@ -136,10 +131,6 @@ function statusColor(status: string) {
         <v-expansion-panel-title>Power consumption</v-expansion-panel-title>
         <v-expansion-panel-text>
           <div class="chart-placeholder">
-            <AssetNameTags v-if="selection.powerList.length > 0" :ids="selection.powerList" class="mb-2" />
-            <p v-else class="text-body-2 text-medium-emphasis mb-2">
-              Select assets above to include in power chart.
-            </p>
             <template v-if="selection.powerIds.size > 0 && !powerStore.loading">
               <PowerChart class="chart-container" />
             </template>
@@ -174,6 +165,10 @@ function statusColor(status: string) {
 .chart-container {
   min-height: 280px;
   height: 280px;
+}
+.chart-container--tall {
+  min-height: 400px;
+  height: 400px;
 }
 .chart-empty {
   align-items: center;
