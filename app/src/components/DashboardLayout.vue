@@ -7,6 +7,9 @@ import { useTelemetryStore } from '@/stores/telemetry'
 import { usePowerStore } from '@/stores/power'
 import { onMounted, ref } from 'vue'
 import AssetTile from '@/components/AssetTile.vue'
+import AssetNameTags from '@/components/AssetNameTags.vue'
+import TelemetryChart from '@/components/TelemetryChart.vue'
+import PowerChart from '@/components/PowerChart.vue'
 
 const assetsStore = useAssetsStore()
 const selection = useSelectionStore()
@@ -22,6 +25,8 @@ onMounted(async () => {
   if (assetsStore.error) return
   const assetIds = assetsStore.list.map((a) => a.id)
   if (assetIds.length === 0) return
+  selection.setTelemetrySelection(assetIds)
+  selection.setPowerSelection(assetIds)
   await Promise.all([
     telemetryStore.loadAll(assetIds),
     powerStore.loadAll(assetIds),
@@ -44,8 +49,8 @@ function statusColor(status: string) {
       <v-expansion-panel>
         <v-expansion-panel-title>Assets</v-expansion-panel-title>
         <v-expansion-panel-text>
-          <!-- Tiles | Table: no border; selected has dark background -->
-          <div class="d-flex align-center flex-wrap gap-2 mb-4">
+          <!-- Tiles | Table: no border; selected has dark background. Hidden on mobile (tiles only). -->
+          <div v-if="!mobile" class="d-flex align-center flex-wrap gap-2 mb-4">
             <v-btn-toggle
               class="assets-view-toggle"
               :model-value="selection.viewMode"
@@ -55,19 +60,7 @@ function statusColor(status: string) {
               @update:model-value="selection.setViewMode($event)"
             >
               <v-btn value="tiles" size="small">Tiles</v-btn>
-              <v-tooltip v-if="mobile" text="Only available on desktop" location="top">
-                <template #activator="{ props: tooltipProps }">
-                  <v-btn
-                    v-bind="tooltipProps"
-                    value="table"
-                    size="small"
-                    disabled
-                  >
-                    Table
-                  </v-btn>
-                </template>
-              </v-tooltip>
-              <v-btn v-else value="table" size="small">Table</v-btn>
+              <v-btn value="table" size="small">Table</v-btn>
             </v-btn-toggle>
           </div>
 
@@ -75,8 +68,8 @@ function statusColor(status: string) {
           <v-alert v-else-if="assetsStore.error" type="error" :text="assetsStore.error" class="mb-4" />
 
           <template v-else>
-            <!-- Desktop: tiles or table. Mobile: tiles only (table disabled above). -->
-            <v-row v-if="selection.viewMode === 'tiles'" class="mb-6">
+            <!-- Desktop: tiles or table. Mobile: always tiles (toggle hidden). -->
+            <v-row v-if="selection.viewMode === 'tiles' || mobile" class="mb-6">
               <v-col v-for="asset in assetsStore.list" :key="asset.id" cols="12" sm="6" md="4" lg="3">
                 <AssetTile :asset="asset" />
               </v-col>
@@ -93,8 +86,6 @@ function statusColor(status: string) {
               </span>
             </th>
             <th>Status</th>
-            <th class="text-center table-toggle-col">Telemetry</th>
-            <th class="text-center table-toggle-col">Power</th>
             <th></th>
           </tr>
         </thead>
@@ -105,24 +96,6 @@ function statusColor(status: string) {
             <td>{{ asset.location }}</td>
             <td>
               <v-chip size="small" :color="statusColor(asset.status)" variant="tonal">{{ asset.status }}</v-chip>
-            </td>
-            <td class="text-center table-toggle-col">
-              <v-switch
-                :model-value="selection.telemetryIds.has(asset.id)"
-                hide-details
-                density="compact"
-                color="primary"
-                @update:model-value="selection.toggleTelemetry(asset.id)"
-              />
-            </td>
-            <td class="text-center table-toggle-col">
-              <v-switch
-                :model-value="selection.powerIds.has(asset.id)"
-                hide-details
-                density="compact"
-                color="primary"
-                @update:model-value="selection.togglePower(asset.id)"
-              />
             </td>
             <td>
               <v-btn size="small" variant="text" color="primary">Edit</v-btn>
@@ -135,37 +108,45 @@ function statusColor(status: string) {
       </v-expansion-panel>
     </v-expansion-panels>
 
-    <!-- Telemetry section: always visible, collapsible; empty chart when no data -->
+    <!-- Telemetry section: always visible, collapsible; multibar chart when assets selected -->
     <v-expansion-panels v-model="telemetryExpanded" class="mb-4">
       <v-expansion-panel>
         <v-expansion-panel-title>Telemetry</v-expansion-panel-title>
         <v-expansion-panel-text>
           <div class="chart-placeholder">
-            <p v-if="selection.telemetryList.length > 0" class="text-body-2 text-medium-emphasis mb-2">
-              Selected: {{ selection.telemetryList.join(', ') }}
-            </p>
+            <AssetNameTags v-if="selection.telemetryList.length > 0" :ids="selection.telemetryList" class="mb-2" />
             <p v-else class="text-body-2 text-medium-emphasis mb-2">
               Select assets above to include in telemetry.
             </p>
-            <div class="chart-empty" aria-hidden="true">Chart (not connected)</div>
+            <template v-if="selection.telemetryIds.size > 0 && !telemetryStore.loading">
+              <TelemetryChart class="chart-container" />
+            </template>
+            <div v-else-if="selection.telemetryIds.size === 0" class="chart-empty" aria-hidden="true">
+              Chart (select assets above)
+            </div>
+            <div v-else class="chart-empty" aria-hidden="true">Loading telemetry…</div>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
 
-    <!-- Power section: always visible, collapsible; empty chart when no data -->
+    <!-- Power section: always visible, collapsible; line chart when assets selected -->
     <v-expansion-panels v-model="powerExpanded">
       <v-expansion-panel>
         <v-expansion-panel-title>Power consumption</v-expansion-panel-title>
         <v-expansion-panel-text>
           <div class="chart-placeholder">
-            <p v-if="selection.powerList.length > 0" class="text-body-2 text-medium-emphasis mb-2">
-              Selected: {{ selection.powerList.join(', ') }}
-            </p>
+            <AssetNameTags v-if="selection.powerList.length > 0" :ids="selection.powerList" class="mb-2" />
             <p v-else class="text-body-2 text-medium-emphasis mb-2">
               Select assets above to include in power chart.
             </p>
-            <div class="chart-empty" aria-hidden="true">Chart (not connected)</div>
+            <template v-if="selection.powerIds.size > 0 && !powerStore.loading">
+              <PowerChart class="chart-container" />
+            </template>
+            <div v-else-if="selection.powerIds.size === 0" class="chart-empty" aria-hidden="true">
+              Chart (select assets above)
+            </div>
+            <div v-else class="chart-empty" aria-hidden="true">Loading power data…</div>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -184,20 +165,15 @@ function statusColor(status: string) {
 .assets-view-toggle :deep(.v-btn.v-btn--active) {
   background: rgba(0, 0, 0, 0.12);
 }
-.table-assets th.table-toggle-col,
-.table-assets td.table-toggle-col {
-  width: 1%;
-  white-space: nowrap;
-  vertical-align: middle;
-}
-.table-assets th.table-toggle-col {
-  text-align: center;
-}
 .table-type-col {
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
 }
 .chart-placeholder {
   min-height: 120px;
+}
+.chart-container {
+  min-height: 280px;
+  height: 280px;
 }
 .chart-empty {
   align-items: center;

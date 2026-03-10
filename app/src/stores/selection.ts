@@ -11,22 +11,16 @@ export const useSelectionStore = defineStore('selection', () => {
   const telemetryList = computed(() => Array.from(telemetryIds.value))
   const powerList = computed(() => Array.from(powerIds.value))
 
-  function toggleTelemetry(id: string) {
-    const next = new Set(telemetryIds.value)
-    if (next.has(id)) next.delete(id)
-    else next.add(id)
-    telemetryIds.value = next
-  }
-
-  function togglePower(id: string) {
-    const next = new Set(powerIds.value)
-    if (next.has(id)) next.delete(id)
-    else next.add(id)
-    powerIds.value = next
-  }
-
   function setViewMode(mode: ViewMode) {
     viewMode.value = mode
+  }
+
+  function setTelemetrySelection(ids: string[]) {
+    telemetryIds.value = new Set(ids)
+  }
+
+  function setPowerSelection(ids: string[]) {
+    powerIds.value = new Set(ids)
   }
 
   return {
@@ -35,8 +29,8 @@ export const useSelectionStore = defineStore('selection', () => {
     viewMode,
     telemetryList,
     powerList,
-    toggleTelemetry,
-    togglePower,
     setViewMode,
+    setTelemetrySelection,
+    setPowerSelection,
   }
 })
