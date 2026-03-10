@@ -7,6 +7,10 @@ import { mdiDomain, mdiMapMarker } from '@mdi/js'
 export default createVuetify({
   components,
   directives,
+  locale: {
+    locale: 'en',
+    fallback: 'en',
+  },
   icons: {
     defaultSet: 'mdi',
     aliases: {
